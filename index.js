@@ -6,7 +6,7 @@ var app = express();
 app.use(bodyParser.json());
 
 var MongoClient = require('mongodb').MongoClient;
-var mdbURL = "mongodb://jihfahri:20ayoub2@ds151355.mlab.com:51355/si1718-jf-conferences";
+var mdbURL = "mongodb://jihaneF:jihaneF@ds151355.mlab.com:51355/si1718-jf-conferences";
 
 var port = (process.env.PORT || 10000);
 var baseURL = "/api/v1";
@@ -29,7 +29,7 @@ MongoClient.connect(mdbURL, { native_parser: true }, function(err, database) {
 
 });
 
-app.get(baseURL + "/conferences/loadInitialData", function(request, response) {
+/*app.get(baseURL + "/conferences/loadInitialData", function(request, response) {
     console.log("INFO: New GET request to /conferences/loadInitialData");
     db.find({}).toArray(function(err, conferences) {
         if (err) {
@@ -44,36 +44,31 @@ app.get(baseURL + "/conferences/loadInitialData", function(request, response) {
                 acronym: "CAISE",
                 edition: 2017,
                 city: "Essen",
-                country: "Germany",
-                conferenceID: "CAISE-2017"
+                country: "Germany"
             }, {
                 conference: "International Conference on Software Engineering",
                 acronym: "ICSE",
                 edition: 2017,
                 city: "Buenos Aires",
-                country: "Argentina",
-                conferenceID: "ICSE-2017"
+                country: "Argentina"
             }, {
                 conference: "Working IEEE/IFIP Conference on Software Architecture",
                 acronym: "WICSA",
                 edition: 2016,
                 city: "Venice",
-                country: "Italy",
-                conferenceID: "WICSA-2016"
+                country: "Italy"
             }, {
                 conference: "Jornadas en Ingeniería del Software y Bases de Datos",
                 acronym: "JISBD",
                 edition: 2016,
                 city: "Salamanca",
-                country: "Spain",
-                conferenceID: "JISBD-2016"
+                country: "Spain"
             }, {
                 conference: "Conference on Advanced Information Systems Engineering",
                 acronym: "CAISE",
                 edition: 2016,
                 city: "Ljubljana",
-                country: "Slovenia",
-                conferenceID: "CAISE-2016"
+                country: "Slovenia"
             }];
 
             console.log("INFO: Initial data created succesfully!");
@@ -88,7 +83,7 @@ app.get(baseURL + "/conferences/loadInitialData", function(request, response) {
         }
     });
 
-});
+});*/
 
 app.get(baseURL + '/conferences', function(req, res) {
     console.log("INFO: New GET req to /conferences");
@@ -104,16 +99,15 @@ app.get(baseURL + '/conferences', function(req, res) {
     });
 });
 
-app.get(baseURL + '/conferences/:conferenceID', function(req, res) {
-    var conferenceID = req.params.conferenceID;
-    if (!conferenceID) {
-        console.log("WARNING: New GET req to /conferences/:conferenceID without conferenceID, sending 400...");
+app.get(baseURL + '/conferences/:idConference', function(req, res) {
+    var idConference = req.params.idConference;
+    if (!idConference) {
+        console.log("WARNING: New GET req to /conferences/:idConference without idConference, sending 400...");
         res.sendStatus(400); // bad request
     }
     else {
-        console.log("INFO: New GET req to /conferences/" + conferenceID);
-        // if (!isNaN(conferenceID)) {
-        db.findOne({ "conferenceID": conferenceID }, (err, filteredConferences) => {
+        console.log("INFO: New GET req to /conferences/" + idConference);
+        db.findOne({ "idConference": idConference }, (err, filteredConferences) => {
             if (err) {
                 console.error('WARNING: Error getting data from DB');
                 res.sendStatus(500); // internal server error
@@ -125,7 +119,7 @@ app.get(baseURL + '/conferences/:conferenceID', function(req, res) {
                     res.send(filteredConferences);
                 }
                 else {
-                    console.log("WARNING: There are not any conference with conferenceID " + conferenceID);
+                    console.log("WARNING: There are not any conference with idConference " + idConference);
                     res.sendStatus(404); // not found
                 }
             }
@@ -142,22 +136,19 @@ app.post(baseURL + '/conferences', function(req, res) {
     }
     else {
         console.log("INFO: New POST req to /conferences with body: " + JSON.stringify(newConference, 2, null));
-        if (!newConference.conference || !newConference.acronym || !newConference.edition || !newConference.city || !newConference.country || !newConference.conferenceID) {
+        if (!newConference.conference || !newConference.acronym || !newConference.edition || !newConference.city || !newConference.country) {
             console.log("WARNING: The conference " + JSON.stringify(newConference, 2, null) + " is not well-formed, sending 422...");
             res.sendStatus(422); // unprocessable entity
         }
         else {
-            var conferenceID;
-            newConference.conferenceID = conferenceID;
-            db.findOne({ "conferenceID": conferenceID }, function(err, conferences) {
+            var idConference = newConference.acronym.concat("-".concat(newConference.edition));
+            newConference.idConference = idConference;
+            db.findOne({ "idConference": idConference }, function(err, conferences) {
                 if (err) {
                     console.error('WARNING: Error getting data from DB');
                     res.sendStatus(500); // internal server error
                 }
                 else {
-                    // var conferencesBeforeInsertion = conferences.filter((conference) => {
-                    //     return (conference.conferenceID.localeCompare(newConference.conferenceID, "en", { 'sensitivity': 'base' }) === 0);
-                    // });
                     if (conferences) {
                         console.log("WARNING: The conference " + JSON.stringify(newConference, 2, null) + " already exits, sending 409...");
                         res.sendStatus(409); // conflict
@@ -180,9 +171,9 @@ app.post(baseURL + '/conferences', function(req, res) {
         }
     }
 });
-app.post(baseURL + '/conferences/:conferenceID', function(req, res) {
-    var conferenceID = req.params.conferenceID;
-    console.log("WARNING: New POST request to /conferences/" + conferenceID + ", sending 405...");
+app.post(baseURL + '/conferences/:idConference', function(req, res) {
+    var idConference = req.params.idConference;
+    console.log("WARNING: New POST request to /conferences/" + idConference + ", sending 405...");
     res.sendStatus(405);
 });
 
@@ -191,21 +182,21 @@ app.put(baseURL + '/conferences', function(req, res) {
     res.sendStatus(405);
 });
 
-app.put(baseURL + '/conferences/:conferenceID', function(req, res) {
+app.put(baseURL + '/conferences/:idConference', function(req, res) {
     var updatedConference = req.body;
-    var conferenceID = req.params.conferenceID;
+    var idConference = req.params.idConference;
     if (!updatedConference) {
-        console.log("WARNING: New PUT request to /conferences/ without conferenceID, sending 400...");
+        console.log("WARNING: New PUT request to /conferences/ without idConference, sending 400...");
         res.sendStatus(400);
     }
     else {
-        console.log("INFO: New PUT request to /conferences/" + conferenceID + " with data " + JSON.stringify(updatedConference, 2, null));
-        if (!updatedConference.conference || !updatedConference.acronym || !updatedConference.edition || !updatedConference.city || !updatedConference.country || !updatedConference.conferenceID) {
+        console.log("INFO: New PUT request to /conferences/" + idConference + " with data " + JSON.stringify(updatedConference, 2, null));
+        if (!updatedConference.conference || !updatedConference.acronym || !updatedConference.edition || !updatedConference.city || !updatedConference.country) {
             console.log("WARNING: The conference " + JSON.stringify(updatedConference, 2, null) + " is not well-formed, sending 422...");
             res.sendStatus(422); // unprocessable entity
         }
         else {
-            db.findOne({ "conferenceID": conferenceID }, (err, conferences) => {
+            db.findOne({ "idConference": idConference }, (err, conferences) => {
                 if (err) {
                     console.error('WARNING: Error getting data from DB');
                     res.sendStatus(500); // internal server error
@@ -213,12 +204,12 @@ app.put(baseURL + '/conferences/:conferenceID', function(req, res) {
                 else {
                     if (conferences) {
                         updatedConference.conference = conferences.conference;
-                        db.update({ "conferenceID": conferenceID }, updatedConference);
-                        console.log("INFO: Modifying conference with conferenceID " + conferenceID + " with data " + JSON.stringify(updatedConference, 2, null));
+                        db.update({ "idConference": idConference }, updatedConference);
+                        console.log("INFO: Modifying conference with idConference " + idConference + " with data " + JSON.stringify(updatedConference, 2, null));
                         res.send(updatedConference);
                     }
                     else {
-                        console.log("WARNING: There are not any conference with conferenceID " + conferenceID);
+                        console.log("WARNING: There are not any conference with idConference " + idConference);
                         res.sendStatus(404); // not found
                     }
                 }
@@ -247,15 +238,15 @@ app.delete(baseURL + '/conferences', function(req, res) {
     });
 });
 
-app.delete(baseURL + '/conferences/:conferenceID', function(req, res) {
-    var conferenceID = req.params.conferenceID;
-    if (!conferenceID) {
-        console.log("WARNING: New DELETE request to /conferences/:conferenceID without conferenceID, sending 400...");
+app.delete(baseURL + '/conferences/:idConference', function(req, res) {
+    var idConference = req.params.idConference;
+    if (!idConference) {
+        console.log("WARNING: New DELETE request to /conferences/:idConference without idConference, sending 400...");
         res.sendStatus(400); // bad request
     }
     else {
-        console.log("INFO: New DELETE request to /conferences/" + conferenceID);
-        db.remove({ "conferenceID": conferenceID }, {}, function(err, numRemoved) {
+        console.log("INFO: New DELETE request to /conferences/" + idConference);
+        db.remove({ "idConference": idConference }, {}, function(err, numRemoved) {
             if (err) {
                 console.error('WARNING: Error removing data from DB');
                 res.sendStatus(500); // internal server error
@@ -263,7 +254,7 @@ app.delete(baseURL + '/conferences/:conferenceID', function(req, res) {
             else {
                 console.log("INFO: Conferences removed: " + numRemoved.result.n);
                 if (numRemoved.result.n === 1) {
-                    console.log("INFO: The conference with conferenceID " + conferenceID + " has been succesfully deleted, sending 200...");
+                    console.log("INFO: The conference with idConference " + idConference + " has been succesfully deleted, sending 200...");
                     res.sendStatus(200);
                 }
                 else {

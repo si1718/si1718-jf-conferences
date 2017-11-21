@@ -185,8 +185,13 @@ app.put(baseURL + '/conferences', function(req, res) {
 app.put(baseURL + '/conferences/:idConference', function(req, res) {
     var updatedConference = req.body;
     var idConference = req.params.idConference;
-    if (!updatedConference) {
-        console.log("WARNING: New PUT request to /conferences/ without idConference, sending 400...");
+    if (!updatedConference /*|| idConference != updatedConference.idConference*/) {
+        if (!updatedConference) {
+            console.log("WARNING: New PUT request to /conferences/ without idConference, sending 400...");
+        }
+        else {
+            console.log("WARNING: New PUT request to /conferences/ with other URL, sending 400...");
+        }
         res.sendStatus(400);
     }
     else {

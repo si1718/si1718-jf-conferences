@@ -142,8 +142,8 @@ app.post(baseURL + '/conferences', function(req, res) {
         }
         else {
             var idConference = newConference.acronym.concat("-".concat(newConference.edition));
-            newConference.idConference = idConference;
-            db.findOne({ "idConference": idConference }, function(err, conferences) {
+            newConference.idConference = idConference.toLowerCase();
+            db.findOne({ "idConference": newConference.idConference}, function(err, conferences) {
                 if (err) {
                     console.error('WARNING: Error getting data from DB');
                     res.sendStatus(500); // internal server error
@@ -185,7 +185,7 @@ app.put(baseURL + '/conferences', function(req, res) {
 app.put(baseURL + '/conferences/:idConference', function(req, res) {
     var updatedConference = req.body;
     var idConference = req.params.idConference;
-    if (!updatedConference /*|| idConference != updatedConference.idConference*/) {
+    if (!updatedConference /*|| idConference != updatedConference.idConference*/ ) {
         if (!updatedConference) {
             console.log("WARNING: New PUT request to /conferences/ without idConference, sending 400...");
         }
@@ -270,3 +270,5 @@ app.delete(baseURL + '/conferences/:idConference', function(req, res) {
         });
     }
 });
+
+

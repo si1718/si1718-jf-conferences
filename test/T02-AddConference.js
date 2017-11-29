@@ -1,4 +1,4 @@
-describe('Add contact', function () {
+describe('Add conference', function () {
 	it('should add a new contact', function (){
 		browser.get('http://localhost:8080');
 

@@ -1,6 +1,7 @@
 /* global angular */
 angular.module("DataManagementApp", ["ngRoute"]).config(function($routeProvider) {
-    $routeProvider.when("/", {
+    $routeProvider
+        .when("/", {
             templateUrl: "main.html"
         })
         
@@ -8,7 +9,7 @@ angular.module("DataManagementApp", ["ngRoute"]).config(function($routeProvider)
             templateUrl: "list.html",
             controller: "ListCtrl"
         })
-        .when("/conferences/:idConference", {
+        .when("/edit/:idConference", {
             templateUrl: "edit.html",
             controller: "EditCtrl"
         });

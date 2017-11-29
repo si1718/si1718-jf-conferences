@@ -1,14 +1,11 @@
 /* global angular */
-/* global Materialize */
-/* global $ */
+/* global toastr */
+
 angular.module("DataManagementApp")
     .controller("ListCtrl", ["$scope", "$http", "$location", "$routeParams", function($scope, $http, $location, $routeParams) {
         console.log("Controller initialized (ListCtrl)");
 
-        // $scope.search = {};
-        // $scope.searchAdd = {};
-        console.log($routeParams);
-        $scope.data = {};
+        $scope.searchValue = "";
 
         function refresh() {
             $http
@@ -17,71 +14,52 @@ angular.module("DataManagementApp")
                     $scope.conferences = response.data;
                 });
 
-            // $scope.newConferences = {
-            //     idConference: "caise-2017",
-            //     conference: "Conference on Advanced Information Systems Engineering",
-            //     acronym: "CAISE",
-            //     edition: "2017",
-            //     city: "Essen",
-            //     country: "Germany"
-            // }
+            $scope.newConference = {
+                idConference: "",
+                conference: "",
+                acronym: "",
+                edition: "",
+                city: "",
+                country: ""
+            };
         }
-
-        $scope.loadInitialData = function() {
-            refresh();
-            if ($scope.data.length == 0) {
-                $http
-                    .get("/api/v1/conferences/loadInitialData")
-                    .then(function(response) {
-                        console.log("Initial data loaded");
-                        Materialize.toast('<i class="material-icons">done</i> Loaded initial data succesfully!', 4000);
-                        refresh();
-                    }, function(response) {
-                        Materialize.toast('<i class="material-icons">error_outline</i> Error adding initial data!', 4000);
-                    });
-            }
-            else {
-                Materialize.toast('<i class="material-icons">error_outline</i> List must be empty to add initial data!', 4000);
-                console.log("List must be empty!");
-            }
-        };
-
+        
         $scope.searchConference = function() {
-            console.log("Data founded");
             $http({
-                    url: "/api/v1/conferences",
-                    params: $routeParams
+                url: "/api/v1/conferences",
+                params: {"search":$scope.searchValue}
                 })
                 .then(function(response) {
+                    console.log($scope.searchValue);
                     $scope.conferences = response.data;
+                }, function(error) {
+                    toastr.error("The data is not found");
                 });
-        }
+        };
 
         $scope.addConference = function() {
 
             $http
                 .post("/api/v1/conferences/", $scope.newConference)
                 .then(function(response) {
-                    console.log("Data added");
-                    Materialize.toast('<i class="material-icons">done</i> ' + $scope.newConference.idConference + ' has been added succesfully!', 4000);
                     refresh();
+                    toastr.info("The data is succesfully added!");
                 }, function(error) {
                     switch (error.status) {
                         case 400:
-                            Materialize.toast('<i class="material-icons">error_outline</i> Error adding data - incorrect data was entered!', 4000);
+                            toastr.error("Error adding data - incorrect data was entered!");
                             break;
                         case 409:
-                            Materialize.toast('<i class="material-icons">error_outline</i> Error adding data - the data already exists!', 4000);
+                            toastr.error("Error adding data - the data already exists!");
                             break;
                         case 422:
-                            Materialize.toast('<i class="material-icons">error_outline</i> Error adding data - some field is wrong!', 4000);
+                            toastr.error("Error adding data - some field is wrong!");
                             break;
                         default:
-                            Materialize.toast('<i class="material-icons">error_outline</i> Error adding data!', 4000);
+                            toastr.error("Error adding data!");
                             break;
                     }
                 });
-
         };
 
         $scope.deleteConference = function(idConference) {
@@ -89,11 +67,10 @@ angular.module("DataManagementApp")
             $http
                 .delete("/api/v1/conferences/" + idConference)
                 .then(function(response) {
-                    console.log("Data deleted");
-                    Materialize.toast('<i class="material-icons">done</i> ' + idConference + ' has been deleted succesfully!', 4000);
                     refresh();
+                    toastr.info("Data has been deleted succesfully!");
                 }, function(error) {
-                    Materialize.toast('<i class="material-icons">error_outline</i> Error deleting data!', 4000);
+                    toastr.error("Error deleting data!");
                 });
 
         };
@@ -104,30 +81,146 @@ angular.module("DataManagementApp")
                 .delete("/api/v1/conferences/")
                 .then(function(response) {
                     console.log("All data deleted");
-                    Materialize.toast('<i class="material-icons">done</i> All data has been deleted succesfully!', 4000);
+                    toastr.info("All data has been deleted succesfully!");
                     refresh();
                 }, function(error) {
-                    Materialize.toast('<i class="material-icons">error_outline</i> Error deleting all data!', 4000);
+                    toastr.error("Error deleting all data!");
                 });
         };
 
-        // $('#searchModal').modal({
-        //     complete: function() {
-        //         modifier = "";
-        //         properties = ""; 
-        //         if ($scope.search.idConference) {
-        //             modifier = "/" + $scope.search.idConference;
-        //         }
-
-        //         for (var prop in $scope.searchAdd) {
-        //             if ($scope.searchAdd.hasOwnProperty(prop) && prop) {
-        //                 properties += prop + "=" + $scope.searchAdd[prop] + "&";
-        //             }
-        //         }
-
-        //         refresh();
-        //     }
-        // });
-
         refresh();
+
+        // $scope.conferences = [];
+
+        // $scope.dataList = function() {
+        //     return $scope.conferences;
+        // };
+
+        // function refresh() {
+        //     $http({
+        //         url: "/api/v1/conferences",
+        //         params: $routeParams
+        //     }).then(function(response) {
+        //         $scope.conferences = response.data;
+        //         //     if( !$.isArray(response.data) ||  !response.data.length ) {
+        //         //         swal("There are no researchers that match your search", null, "info");
+        //         //     }
+        //         // }, function(error){
+        //         //     swal("There are no researchers that match your search", null, "info");
+
+        //     });
+
+
+        //     $scope.newConference = {
+        //         conference: "",
+        //         acronym: "",
+        //         edition: "",
+        //         city: "",
+        //         country: ""
+        //     };
+
+        //     $scope.updateConference = {
+        //         idConference: "",
+        //         conference: "",
+        //         acronym: "",
+        //         edition: "",
+        //         city: "",
+        //         country: ""
+        //     };
+        // }
+
+        // $scope.addConference = function() {
+
+        //     $http
+        //         .post("/api/v1/conferences/", $scope.newConference)
+        //         .then(function(response) {
+        //             refresh();
+        //             console.log("Data added");
+        //             toastr.info("The data is succesfully added!");
+        //         }, function(error) {
+        //             switch (error.status) {
+        //                 case 400:
+        //                     toastr.error("Error adding data - incorrect data was entered!");
+        //                     break;
+        //                 case 409:
+        //                     toastr.error("Error adding data - the data already exists!");
+        //                     break;
+        //                 case 422:
+        //                     toastr.error("Error adding data - some field is wrong!");
+        //                     break;
+        //                 default:
+        //                     toastr.error("Error adding data!");
+        //                     break;
+        //             }
+        //         });
+
+        // };
+
+        // $scope.editConference = function(idConference) {
+
+        //     delete $scope.updateConference._id;
+
+        //     $http
+        //         .put("/api/v1/conferences/" + idConference, $scope.updateConference)
+        //         .then(function(response) {
+        //             refresh();
+        //             $scope.openEditModal(idConference);
+        //             console.log("edited!");
+        //             toastr.info("The data is succesfully edited!");
+        //             $location.path("/conferences");
+        //         }, function(error) {
+        //             switch (error.status) {
+        //                 case 422:
+        //                     toastr.error("Error editing data - some field is wrong");
+        //                     break;
+        //                 default:
+        //                     toastr.error("Error editing data!");
+        //                     break;
+        //             }
+        //         });
+        // };
+
+        // // $scope.searchConference = function() {
+        // //     console.log("Data founded");
+        // //     $http({
+        // //             url: "/api/v1/conferences",
+        // //             params: $scope.tosearch
+        // //         })
+        // //         .then(function(response) {
+        // //             $scope.conferences = response.data;
+        // //         }, function(error) {
+        // //             toastr.error("The data is not found");
+        // //         });
+        // // };
+
+
+
+        // $scope.deleteConference = function(idConference) {
+
+        //     $http
+        //         .delete("/api/v1/conferences/" + idConference)
+        //         .then(function(response) {
+        //             refresh();
+        //             console.log("Data deleted");
+        //             toastr.info("The data is succesfullty deleted");
+        //             refresh();
+        //         }, function(error) {
+        //             toastr.error("Error deleting data");
+        //         });
+
+        // };
+
+        // $scope.deleteAllConferences = function() {
+
+        //     $http
+        //         .delete("/api/v1/conferences/")
+        //         .then(function(response) {
+        //             console.log("All data deleted");
+        //             toastr.info("All data has been deleted succesfully!");
+        //             refresh();
+        //         }, function(error) {
+        //             toastr.error("Error deleting all data!");
+        //         });
+        // };
+
     }]);

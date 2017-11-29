@@ -1,44 +1,33 @@
 <div ng-controller="EditCtrl">
     <h2>Edit conference</h2>
 
-    <div class="row">
-        <form class="col s12">
-            <div class="row">
-                <div class="col s12">
-                    <h3>{{updatedConference.idConference}}</h3>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s3">
-                    <input class="form-control" type="text" id="conference" ng-model="updatedConference['conference']">
-                    <label for="conference">conference</label>
-                </div>
-                <div class="input-field col s3">
-                    <input class="form-control" type="text" id="acronym" ng-model="updatedConference['acronym']">
-                    <label for="acronym">acronym</label>
-                </div>
-                <div class="input-field col s3">
-                    <input class="form-control" type="text" id="edition" ng-model="updatedConference['edition']">
-                    <label for="edition">edition</label>
-                </div>
-                <div class="input-field col s3">
-                    <input class="form-control" type="text" id="city" ng-model="updatedConference['city']">
-                    <label for="city">city</label>
-                </div>
-                <div class="input-field col s3">
-                    <input class="form-control" type="text" id="country" ng-model="updatedConference['country']">
-                    <label for="country">country</label>
-                </div>
-            </div>
-        </form>
-    </div>
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>idConference</th>
+                <th>conference</th>
+                <th>acronym</th>
+                <th>edition</th>
+                <th>city</th>
+                <th>country</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{updatedConference.idConference}}</td>
+                <td><input ng-model="updatedConference.conference" /></td>
+                <td><input ng-model="updatedConference.acronym" /></td>
+                <td><input ng-model="updatedConference.edition" /></td>
+                <td><input ng-model="updatedConference.city" /></td>
+                <td><input ng-model="updatedConference.country" /></td>
 
-     <div class="row">
-        <div class="col s12 right-align">
-            <button class="btn waves-effect waves-light" ng-click="updateConference(updatedConference)"><i class="material-icons left">edit</i>Edit</button>
-            <!--<button class="btn waves-effect waves-light red" ng-click="discardData()"><i class="material-icons left">delete</i>Discard changes</button>-->
-            <button class="btn waves-effect waves-light" onclick="location.href='#!/conferences'"><i class="material-icons left">arrow_back</i>Back</button>
-
-        </div>
-    </div>
+                <td>
+                    <button class="btn btn-primary" ng-click="updateConference()">Edit</button>
+                    <button class="btn btn-info" onclick="location.href='#!/conferences';">Back</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
 </div>

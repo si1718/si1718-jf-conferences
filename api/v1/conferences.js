@@ -4,102 +4,23 @@ var exports = module.exports = {};
 exports.register = function(app, db, baseURL) {
 
 
-    // var insertSearchFields = function(request) {
-    //     var query = {};
-    //     console.log("hola");
-    //     var q;
-    //     if (request.query[q = "idConference"] && !isNaN(request.query[q])) 
-    //         query[q] = Number(request.query[q]);
-
-    //     if (request.query[q = "conference"] && !isNaN(request.query[q])) 
-    //         query[q] = Number(request.query[q]);
-    //     if (request.query[q = "acronym"] && !isNaN(request.query[q])) 
-    //         query[q] = Number(request.query[q]);
-    //     if (request.query[q = "edition"] && !isNaN(request.query[q])) 
-    //         query[q] = Number(request.query[q]);
-    //     if (request.query[q = "city"] && !isNaN(request.query[q])) 
-    //         query[q] = Number(request.query[q]);
-    //     if (request.query[q = "country"] && !isNaN(request.query[q])) 
-    //         query[q] = Number(request.query[q]);
-    //     console.log("Adios" + query);
-    //     return query;
-    // };
-
-    // GET Load inital data if database is empty
-    app.get(baseURL + "/conferences/loadInitialData", function(req, res) {
-        console.log("INFO: New GET request to /conferences/loadInitialData");
-        db.find({}).count((err, count) => {
-            if (err) {
-                console.error('WARNING: Error getting data from DB');
-                res.sendStatus(500); // internal server error
-            }
-            console.log("INFO: idConference count: " + count);
-            if (count == 0) {
-                // Load inital data
-                db.insertMany([{
-                    "idConference": "caise-2017",
-                    "conference": "Conference on Advanced Information Systems Engineering",
-                    "acronym": "CAISE",
-                    "edition": 2017,
-                    "city": "Essen",
-                    "country": "Germany"
-                }, {
-                    "conference": "International Conference on Software Engineering",
-                    "acronym": "ICSE",
-                    "edition": 2017,
-                    "city": "Buenos Aires",
-                    "country": "Argentina"
-                }, {
-                    "conference": "Working IEEE/IFIP Conference on Software Architecture",
-                    "acronym": "WICSA",
-                    "edition": 2016,
-                    "city": "Venice",
-                    "country": "Italy"
-                }, {
-                    "conference": "Jornadas en Ingeniería del Software y Bases de Datos",
-                    "acronym": "JISBD",
-                    "edition": 2016,
-                    "city": "Salamanca",
-                    "country": "Spain"
-                }, {
-                    "conference": "Conference on Advanced Information Systems Engineering",
-                    "acronym": "CAISE",
-                    "edition": 2016,
-                    "city": "Ljubljana",
-                    "country": "Slovenia"
-                }]);
-                console.log("INFO: Initial data created succesfully!");
-                res.sendStatus(201); // created
-            }
-            else {
-                // Not empty
-                console.log("WARNING: Database is not empty - initial data will not be created");
-                res.sendStatus(409); // conflict
-            }
-        });
-    });
-
     // GET a collection
     app.get(baseURL + '/conferences', function(req, res) {
         var search = req.query.search;
         var query = {};
 
         if (search) {
-            var searchStr = String(search);
-
-           // query = { $or: [{ 'idConference': searchStr }, { 'conference': searchStr }, { 'acronym': searchStr }, { 'edition': searchStr }, { 'city': searchStr }, { 'country': searchStr }] };
              query = { $or:[ 
-                        {'idConference':{ $regex: '.*' + searchStr + '.*', $options: 'i' }}, 
-                        {'conference':{ $regex: '.*' + searchStr + '.*', $options: 'i' }}, 
-                        {'acronym':{ $regex: '.*' + searchStr + '.*', $options: 'i' }},
-                        {'edition':{ $regex: '.*' + searchStr + '.*', $options: 'i' }}, 
-                        {'city':{ $regex: '.*' + searchStr + '.*', $options: 'i' }}, 
-                        {'country':{ $regex: '.*' + searchStr + '.*', $options: 'i' }} 
+                        {'idConference':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
+                        {'conference':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
+                        {'acronym':{ $regex: '.*' + search + '.*', $options: 'i' }},
+                        {'edition':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
+                        {'city':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
+                        {'country':{ $regex: '.*' + search + '.*', $options: 'i' }} 
                     ]};
             
         }
         console.log("INFO: New GET req to /conferences");
-        //var query = insertSearchFields(req);
         db.find(query).toArray(function(err, conferences) {
             if (err) {
                 console.error('WARNING: Error getting data from DB');

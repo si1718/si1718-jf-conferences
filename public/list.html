@@ -3,97 +3,51 @@
     <br>
     <br>
 
-    <div id="searchModal" class="modal">
-        <div class="modal-content">
-            <h4>Search</h4>
-            <div class="row">
-                <form class="col s12">
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input class="form-control" type="text" id="idConference" ng-model="tosearch.idConference">
-                            <label for="idConference">idConference</label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input class="form-control" type="text" id="conference" ng-model="tosearch.conference">
-                            <label for="conference">conference</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s3">
-                            <input class="form-control" type="text" id="acronym" ng-model="tosearch['acronym']">
-                            <label for="acronym">acronym</label>
-                        </div>
-                        <div class="input-field col s3">
-                            <input class="form-control" type="text" id="edition" ng-model="searchAdd['edition']">
-                            <label for="edition">edition</label>
-                        </div>
-                        <div class="input-field col s3">
-                            <input class="form-control" type="text" id="city" ng-model="tosearch['city']">
-                            <label for="city">city</label>
-                        </div>
-                        <div class="input-field col s3">
-                            <input class="form-control" type="text" id="country" ng-model="tosearch['country']">
-                            <label for="country">country</label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a href="" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click = "searchConference()">OK</a>
-        </div>
+    <div>
+        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search" ng-model="searchValue">
+        <a class="btn btn-info" ng-click="searchConference()">Search</a>
     </div>
-    <div class="container">
-        <table class="highlight">
-            <thead>
-                <tr>
-                    <th>idConference</th>
-                    <th>conference</th>
-                    <th>acronym</th>
-                    <th>edition</th>
-                    <th>city</th>
-                    <th>country</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input class="form-control" ng-model="newConference.idConference" /></td>
-                    <td><input class="form-control" ng-model="newConference.conference" /></td>
-                    <td><input class="form-control" ng-model="newConference.acronym" /></td>
-                    <td><input class="form-control" ng-model="newConference.edition" /></td>
-                    <td><input class="form-control" ng-model="newConference.city " /></td>
-                    <td><input class="form-control" ng-model="newConference.country" /></td>
-                    <td><button class="btn waves-effect waves-light" ng-click="addConference()"><i class="material-icons">add</i></button></td>
-                </tr>
-                <tr ng-repeat="conference in conferences">
-                    <td>{{conference.idConference}}</td>
-                    <td>{{conference.conference}}</td>
-                    <td>{{conference.acronym}}</td>
-                    <td>{{conference.edition}}</td>
-                    <td>{{conference.city}}</td>
-                    <td>{{conference.country}}</td>
-                    <td>
-                        <a href="#!/conferences/{{conference.idConference}}">
-                            <button class="btn waves-effect waves-light">
-                                <i class="material-icons">edit</i></button>
-                        </a>
-                        <button class="btn waves-effect waves-light red" ng-click="deleteConference(conference.idConference)">
-                            <i class="material-icons">delete</i>
-                        </button
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="right-align">
-            <button class="btn waves-effect waves-light green darken-1" ng-show="data.length==0" ng-click="loadInitialData()"><i class="material-icons left">recent_actors</i>Load initial</button>
-            <button class="btn waves-effect waves-light red darken-2" ng-show="data.length!=0" ng-click="deleteAllConferences()"><i class="material-icons left">warning</i>Delete all</button>
-    </div>
-</div>
+    
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>IdConference</th>
+                <th>Conference</th>
+                <th>Acronym</th>
+                <th>Edition</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input ng-model="newConference.idConference" /></td>
+                <td><input ng-model="newConference.conference" /></td>
+                <td><input ng-model="newConference.acronym" /></td>
+                <td><input ng-model="newConference.edition" /></td>
+                <td><input ng-model="newConference.city" /></td>
+                <td><input ng-model="newConference.country" /></td>
+                <td>
+                    <button class="btn btn-primary" ng-click="addConference()">Add</button>
+                </td>
+            </tr>
 
+            <tr ng-repeat="conference in conferences">
+                <td><a href="#!/edit/{{conference.idConference}}">{{conference.idConference}}</a></td>
+                <td>{{conference.conference}}</td>
+                <td>{{conference.acronym}}</td>
+                <td>{{conference.edition}}</td>
+                <td>{{conference.city}}</td>
+                <td>{{conference.country}}</td>
+                <td>
+                    <button class="btn btn-danger" ng-click="deleteConference(conference.idConference)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+        <td>
+            <button class="btn btn-danger" ng-click="deleteAllConferences()">Delete all</button>
+        </td>
+    </table>
 
-<div class="fixed-action-btn">
-    <a class="btn-floating btn-large blue" onClick="$('#searchModal').modal('open');">
-            <i class="large material-icons">search</i>
-        </a>
-</div>
 </div>

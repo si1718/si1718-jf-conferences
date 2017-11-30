@@ -2,9 +2,7 @@
 angular.module("DataManagementApp", ["ngRoute"]).config(function($routeProvider) {
     $routeProvider
         .when("/", {
-           // templateUrl: "main.html"
-            templateUrl: "list.html",
-            controller: "ListCtrl"
+            templateUrl: "main.html"
         })
         .when("/conferences", {
             templateUrl: "list.html",

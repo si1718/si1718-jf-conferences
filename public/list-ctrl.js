@@ -23,17 +23,24 @@ angular.module("DataManagementApp")
                 country: ""
             };
         }
-        
+
         $scope.searchConference = function() {
             $http({
-                url: "/api/v1/conferences",
-                params: {"search":$scope.searchValue}
+                    url: "/api/v1/conferences",
+                    params: { "search": $scope.searchValue }
                 })
                 .then(function(response) {
                     console.log($scope.searchValue);
                     $scope.conferences = response.data;
                 }, function(error) {
-                    toastr.error("The data is not found");
+                    switch (error.status) {
+                        case 404:
+                            toastr.error("The data is not found");
+                            break;
+                        default:
+                            toastr.error("Error searching data!");
+                            break;
+                    }
                 });
         };
 

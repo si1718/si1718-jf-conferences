@@ -5,11 +5,12 @@ var path = require("path");
 var cors = require("cors");
 
 var app = express();
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(cors());
+
 
 var MongoClient = require('mongodb').MongoClient;
 var mdbURL = "mongodb://jihaneF:jihaneF@ds151355.mlab.com:51355/si1718-jf-conferences";

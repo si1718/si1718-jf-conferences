@@ -29,18 +29,31 @@ angular.module("DataManagementApp")
                     url: "/api/v1/conferences",
                     params: { "search": $scope.searchValue }
                 })
-                .then(function(response) {
-                    console.log($scope.searchValue);
-                    $scope.conferences = response.data;
-                }, function(error) {
-                    switch (error.status) {
-                        case 404:
-                            toastr.error("The data is not found");
-                            break;
-                        default:
-                            toastr.error("Error searching data!");
-                            break;
-                    }
+                .then(
+                    function(response){
+                        if(response.data.length == 0){
+                            $scope.conferenceExists = false;
+                            toastr.error("The data is not founded");
+                        }else {
+                            $scope.conferences = response.data;
+                            console.log($scope.conferences);
+                        }
+                    }, function(response){
+                        $scope.conferenceExists = false;
+                    
+                //     function(response) {
+                //     console.log($scope.searchValue);
+                //     $scope.conferences = response.data;
+                // }, function(error) {
+                //     switch (error.status) {
+                //         case 404:
+                //             toastr.error("The data is not founded");
+                //             break;
+                //         default:
+                //             toastr.error("Error searching data!");
+                //             break;
+                //     }
+                //     //$location.path("/conferences");
                 });
         };
 

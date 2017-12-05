@@ -4,99 +4,179 @@ angular.module("DataManagementApp")
     .controller("Integration1Ctrl", ["$scope", "$http", "$location", "$routeParams", function($scope, $http, $location, $routeParams) {
         console.log("Controller initialized (Integration1Ctrl)");
 
-        $http.get("/api/v1/conferences").then(function(response) {
 
-            $scope.data = {};
-            var dataCache = {};
-            
-            $scope.idConference = [];
-            $scope.conference = [];
-            $scope.acronym = [];
-            $scope.edition = [];
-            $scope.city = [];
-            $scope.country = [];
-            $scope.title = [];
-            $scope.year = [];
-            $scope.editor = [];
-            $scope.coeditors = [];
-            $scope.isbn = [];
-            $scope.city2 = [];
-            $scope.country = [];
-            
- $http.get("../conferences").then(function(response) {
+        $scope.data = {};
+        var dataCache = {};
 
-            dataCacheEsl = response.data;
-            $scope.data = dataCacheEsl;
+        $scope.idConference = [];
+        $scope.conference = [];
+        $scope.acronym = [];
+        $scope.edition = [];
+        $scope.city = [];
+        $scope.country = [];
 
-            for (var i = 0; i < response.data.length; i++) {
-                $scope.categorias.push($scope.data[i].country + " " + $scope.data[i].year);
-                $scope.eslmale.push(Number($scope.data[i].eslmale));
-                $scope.eslfemale.push(Number($scope.data[i].eslfemale));
-                $scope.esltotal.push(Number($scope.data[i].esltotal));
-                $scope.eslobjective.push(Number($scope.data[i].eslobjective));
+        $scope.title = [];
+        $scope.year = [];
+        $scope.editor = [];
+        $scope.coeditors = [];
+        $scope.isbn = [];
+        $scope.city2 = [];
+        $scope.country = [];
 
-                console.log($scope.data[i].country);
-            }
+        $scope.conferenceMap = {};
 
-            $http.get("/api/v1/gdp-per-capita" + "?" + "apikey=" + $scope.apikey).then(function(response) {
+        $http.get("/api/v1/conferences")
+            .then(function(response) {
                 dataCache = response.data;
                 $scope.data = dataCache;
 
-                for (var i = 0; i < response.data.length; i++) {
-                    $scope.categorias1.push($scope.data[i].country + " " + $scope.data[i].year);
-                    //$scope.country.push($scope.data[i].country);
-                    //$scope.year.push(Number($scope.data[i].year));
-                    $scope.gdp_per_capita_growth.push(Number($scope.data[i]["gdp-per-capita-growth"]));
-                    $scope.gdp_per_capita.push(Number($scope.data[i]["gdp-per-capita"]));
-                    $scope.gdp_per_capita_ppp.push(Number($scope.data[i]["gdp-per-capita-ppp"]));
+                var countryApi = {};
+                var data2 = {};
+                var nProceedings = 0;
+                var confName = {};
+                var confAcronym = {};
 
-                }
-                console.log("Controller initialized (GdpPerCapitaProxyGraphCtrl)");
 
-                // Gestión de datos
-                var categoriasTotal = [];
-                var gdpPerCapitaGrowthTotal = [];
-                var eslMaleTotal = [];
-                var eslFemalTotal = [];
-                var eslTotalTotal = [];
-                var eslObjectiveTotal = [];
+                $http.get("https://si1718-ajr-proceedings.herokuapp.com/api/v1/proceedings")
+                    .then(function(response) {
+                        data2 = response.data;
+                        console.log(data2.length)
+                        var listSearchedConferences = [];
+                        for (var i = 0; i < $scope.data.length; i++) {
+                            countryApi = $scope.data[i].country;
+                            confName = $scope.data[i].conference;
 
-                var repeated = new Array($scope.categorias1.length).fill(false);
-               
-                for (var i = 0; i < $scope.categorias.length; i++) {
-                    var check = false;
-                    var index = 0;
-                    for (var j = 0; j < $scope.categorias1.length; j++) {
-                        if ($scope.categorias[i] == $scope.categorias1[j]) {
-                            repeated[j] = true;
-                            check = true;
-                            index = j;
+                            if (listSearchedConferences.indexOf(confName) != -1) {
+                                continue;
+                            }
+
+                            confAcronym = $scope.data[i].acronym;
+                            console.log(confName + "     iteracion " + i);
+                            var title = "";
+                            for (var j = 0; j < data2.length; j++) {
+                                title = data2[j].title;
+                                console.log(title + "     iteracion " + j);
+                                if (title.includes(confName) || confName.includes(title)) {
+                                    console.log("entra")
+
+                                    if (!$scope.conferenceMap[confName]) {
+                                        $scope.conferenceMap[confName] = 1;
+                                    }
+                                    else {
+                                        $scope.conferenceMap[confName] += 1;
+                                    }
+                                }
+                                else {
+                                    console.log(title.length + " " + confName.length);
+                                }
+                            }
+                            listSearchedConferences.push(confName);
                         }
-                    }
-                    if (check) {
-                        gdpPerCapitaGrowthTotal.push($scope.gdp_per_capita_growth[index]);
+                        console.log(listSearchedConferences);
+                        console.log($scope.conferenceMap);
 
-                    }
-                    else {
-                        gdpPerCapitaGrowthTotal.push(0);
-                    }
-                    categoriasTotal.push($scope.categorias[i]);
-                    eslMaleTotal.push($scope.eslmale[i]);
-                    eslFemalTotal.push($scope.eslfemale[i]);
-                    eslTotalTotal.push($scope.esltotal[i]);
-                    eslObjectiveTotal.push($scope.eslobjective[i]);
-                }
-            
-                for (var r = 0; r < repeated.length; r++) {
-                    if (!repeated[r]) {
-                        categoriasTotal.push($scope.categorias1[r]);
-                        gdpPerCapitaGrowthTotal.push($scope.gdp_per_capita_growth[r]);
-                        eslMaleTotal.push(0);
-                        eslFemalTotal.push(0);
-                        eslTotalTotal.push(0);
-                        eslObjectiveTotal.push(0);
-                    }
-                }
-        });
+                        // Highcharts
 
+                        Highcharts.chart('container', {
+                            chart: {
+                                type: 'bar'
+                            },
+                            title: {
+                                text: 'Data representation'
+                            },
+                            subtitle: {
+                                text: ''
+                            },
+                            xAxis: {
+                                categories: Object.keys($scope.conferenceMap),
+                                title: {
+                                    text: null
+                                }
+                            },
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: 'Nº de proceedings',
+                                    align: 'high'
+                                },
+                                labels: {
+                                    overflow: 'justify'
+                                }
+                            },
+                            tooltip: {
+                                valueSuffix: ''
+                            },
+                            plotOptions: {
+                                bar: {
+                                    dataLabels: {
+                                        enabled: true
+                                    }
+                                }
+                            },
+                            legend: {
+                                layout: 'vertical',
+                                align: 'right',
+                                verticalAlign: 'top',
+                                x: -40,
+                                y: 50,
+                                floating: true,
+                                borderWidth: 1,
+                                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                                shadow: true
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: 'Conference',
+                                data: Object.values($scope.conferenceMap)
+                            }]
+                        });
+
+                        // Highcharts.chart('container', {
+                        //     chart: {
+                        //         type: 'column'
+                        //     },
+                        //     title: {
+                        //         text: 'Data representation'
+                        //     },
+                        //     subtitle: {
+                        //         text: ''
+                        //     },
+                        //     xAxis: {
+                        //         categories: Object.keys($scope.conferenceMap),
+                        //         crosshair: true
+                        //     },
+                        //     yAxis: {
+                        //         min: 0,
+                        //         title: {
+                        //             text: 'Nº de proceedings'
+                        //         }
+                        //     },
+                        //     tooltip: {
+                        //         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        //         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        //             '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                        //         footerFormat: '</table>',
+                        //         shared: true,
+                        //         useHTML: true
+                        //     },
+                        //     plotOptions: {
+                        //         column: {
+                        //             pointPadding: 0.2,
+                        //             borderWidth: 0
+                        //         }
+                        //     },
+                        //     series: [{
+                        //         name: 'Conference',
+                        //         data: Object.values($scope.conferenceMap)
+
+                        //     }]
+
+                        // });
+
+                    });
+
+
+            });
     }]);

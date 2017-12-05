@@ -16,11 +16,11 @@ angular.module("DataManagementApp", ["ngRoute"]).config(function($routeProvider)
             templateUrl: "analytics.html",
             controller: "AnalyticsCtrl"
         })
-        .when("/integrations", {
+        .when("/integration1", {
             templateUrl: "integration1.html",
             controller: "Integration1Ctrl"
         })
-        .when("/integrations", {
+        .when("/integration2", {
             templateUrl: "integration2.html",
             controller: "Integration2Ctrl"
         });

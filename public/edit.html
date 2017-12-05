@@ -1,7 +1,7 @@
 <div ng-controller="EditCtrl">
     <h2>Edit conference</h2>
 
-    <table class="table table-responsive">
+    <table class="table table-responsive" style="display: block; width: 100%; overflow-x: auto;">
         <thead>
             <tr>
                 <th>idConference</th>
@@ -10,6 +10,8 @@
                 <th>edition</th>
                 <th>city</th>
                 <th>country</th>
+                <th>proceeding key</th>
+                <th>keywords</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,6 +23,11 @@
                 <td><input ng-model="updatedConference.edition" /></td>
                 <td><input ng-model="updatedConference.city" /></td>
                 <td><input ng-model="updatedConference.country" /></td>
+                <td>
+                    <input type="text" ng-model="proceedingField" ng-disabled="dis">
+                    <button class="btn btn-info" ng-click="validate()">Validate</a>
+                </td>
+                <td><input ng-model="updatedConference.keywords" /></td>
 
                 <td>
                     <button class="btn btn-primary" ng-click="updateConference()">Edit</button>
@@ -29,5 +36,6 @@
             </tr>
         </tbody>
     </table>
-    
+
 </div>
+

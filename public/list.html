@@ -1,5 +1,5 @@
 <div ng-controller="ListCtrl">
-    <h2>Conferences</h2>
+    <h2> List Conferences</h2>
     <br>
     <br>
 
@@ -9,7 +9,7 @@
         <!--<button class="btn btn-info" onclick="location.href='#!/conferences';">Back</button>-->
     </div>
     
-    <table class="table table-responsive">
+    <table class="table table-responsive" style="display: block; width: 100%; overflow-x: auto;">
         <thead>
             <tr>
                 <th>IdConference</th>
@@ -18,17 +18,19 @@
                 <th>Edition</th>
                 <th>City</th>
                 <th>Country</th>
+                <th>Keywords</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><input ng-model="newConference.idConference" /></td>
+                <td></td>
                 <td><input ng-model="newConference.conference" /></td>
                 <td><input ng-model="newConference.acronym" /></td>
                 <td><input ng-model="newConference.edition" /></td>
                 <td><input ng-model="newConference.city" /></td>
                 <td><input ng-model="newConference.country" /></td>
+                <td><input ng-model="newConference.keywords" /></td>
                 <td>
                     <button class="btn btn-primary" ng-click="addConference()">Add</button>
                 </td>
@@ -41,6 +43,7 @@
                 <td>{{conference.edition}}</td>
                 <td>{{conference.city}}</td>
                 <td>{{conference.country}}</td>
+                <td>{{conference.keywords}}</td>
                 <td>
                     <button class="btn btn-danger" ng-click="deleteConference(conference.idConference)">Delete</button>
                 </td>

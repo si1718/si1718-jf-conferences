@@ -32,5 +32,38 @@ angular.module("DataManagementApp")
                             break;
                     }
                 });
+            $scope.dis = false;
         };
+        
+        $scope.dis = false;
+        
+        function urlIdProceeding(data){
+            return "https://si1718-ajr-proceedings.herokuapp.com/api/v1/proceedings" + "/" + data.idProceeding;
+        }
+        
+        $scope.validate = function() {
+            var url = "https://si1718-ajr-proceedings.herokuapp.com/api/v1/proceedings" + "?" + "year=" + 
+                           /* $scope.proceedingField + "&city=" + $scope.proceedingField + "&country=" + $scope.proceedingField + 
+                            "&editor=" + $scope.proceedingField + "&idProceeding=" + $scope.proceedingField + "&isbn=" + $scope.proceedingField + 
+                            "&title=" + $scope.proceedingField + "&coeditors=" +*/ $scope.proceedingField;
+                            console.log(url);
+                            
+            $http
+                .get(url)
+                .then(function (response){
+                    console.log(response);
+                    if(response.data.length == 0){
+                        console.log("Sin coincidencias");
+                        toastr.info("Sin coincidencias");
+                    } else {
+                        $scope.proceedingField = response.data[0].title;
+                        $scope.updatedConference.proceeding = urlIdProceeding(response.data[0]);
+                        $scope.updatedConference.proceedingTitle = response.data[0].title;
+                        $scope.dis = true;
+                    }
+                }, function(error){
+                        console.log("Error server o no hay coincidencias");
+                        toastr.error("Error server o no hay coincidencias");
+                });
+        }
     }]);

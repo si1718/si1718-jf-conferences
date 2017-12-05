@@ -59,6 +59,7 @@ angular.module("DataManagementApp")
                         $scope.proceedingField = response.data[0].title;
                         $scope.updatedConference.proceeding = urlIdProceeding(response.data[0]);
                         $scope.updatedConference.proceedingTitle = response.data[0].title;
+                        $scope.updatedConference.proceedingViewURL = response.data[0].viewURL;
                         $scope.dis = true;
                     }
                 }, function(error){

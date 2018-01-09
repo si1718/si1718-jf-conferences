@@ -37,6 +37,7 @@
                 <th>City</th>
                 <th>Country</th>
                 <th>Proceeding title</th>
+                <th>UrlView</th>
                 <th>Keywords</th>
                 <th>Actions</th>
             </tr>
@@ -50,6 +51,7 @@
                 <td><input ng-model="newConference.city" /></td>
                 <td><input ng-model="newConference.country" /></td>
                 <td><input ng-model="newConference.proceedingTitle" /></td>
+                <td><input ng-model="newConference.viewUrl" /></td>
                 <td><input ng-model="newConference.keywords" /></td>
                 <td>
                     <button class="btn btn-primary" ng-click="addConference()">Add</button>
@@ -64,6 +66,7 @@
                 <td>{{conference.city}}</td>
                 <td>{{conference.country}}</td>
                 <td><a href='{{conference.proceedingViewURL}}'>{{conference.proceedingTitle}}</a></td>
+                <td><a href='{{conference.viewUrl}}'>{{conference.viewUrl}}</a></td>
                 <td>{{conference.keywords}}</td>
                 <td>
                     <button class="btn btn-danger" ng-click="deleteConference(conference.idConference)">Delete</button>

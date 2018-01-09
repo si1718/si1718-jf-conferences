@@ -218,6 +218,7 @@ exports.register = function(app, db, baseURL) {
             else {
                 var idConference = newConference.acronym.concat("-".concat(newConference.edition));
                 newConference.idConference = idConference.toLowerCase();
+                newConference.viewUrl = "https://si1718-jf-conferences-sos161706jf.c9users.io/#!/view/" + newConference.idConference;
                 db.findOne({ "idConference": newConference.idConference }, function(err, conferences) {
                     if (err) {
                         console.error('WARNING: Error getting data from DB');

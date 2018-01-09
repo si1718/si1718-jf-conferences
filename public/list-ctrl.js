@@ -51,6 +51,7 @@ angular.module("DataManagementApp")
                 edition: "",
                 city: "",
                 country: "",
+                viewUrl: "",
                 keywords: ""
             };
             
@@ -58,13 +59,13 @@ angular.module("DataManagementApp")
         }
 
         $scope.searchConference = function() {
-           // extractCount();
+            extractCount();
             $http({
                     url: "/api/v1/conferences",
                     params: {
                         "search": $scope.searchValue,
-                       /* "limit": $scope.limit,
-                        "skip": (($scope.page - 1) * $scope.limit)*/
+                        "limit": $scope.limit,
+                        "skip": (($scope.page - 1) * $scope.limit)
                     }
                 })
                 .then(
@@ -114,7 +115,11 @@ angular.module("DataManagementApp")
         };
 
         $scope.addConference = function() {
-
+            //var conferenceID = $scope.newConference.idConference;
+            //var url = "https://si1718-jf-conferences-sos161706jf.c9users.io/#!/view/" + conferenceID;
+            //console.log(conferenceID);
+            //$scope.newConference.viewUrl = url;
+            
             $http
                 .post("/api/v1/conferences/", $scope.newConference)
                 .then(function(response) {
@@ -167,7 +172,7 @@ angular.module("DataManagementApp")
          $scope.conferenceIdConference = $routeParams.idConference;
 
 
-        $http
+       /* $http
             .get("/api/v1/conferences/" + $scope.conferenceIdConference)
             .then(function(response) {
                 $scope.viewedconferences = response.data;

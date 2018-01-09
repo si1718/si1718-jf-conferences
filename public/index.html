@@ -1,49 +1,54 @@
- <!DOCTYPE html>
-  <html ng-app="DataManagementApp">
-      
-    <head>
-        
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        
-        <title>Conferences</title>
-        
-        <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
-        <link href="/bower_components/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
- 
-        <!-- Custom CSS -->
-        <link href="vendor/css/full-width-pics.css" rel="stylesheet">
-        <link href="vendor/css/custom-bootstrap.css" rel="stylesheet">
-        
-        <!-- Angular-bootstrap -->
-        <link rel="stylesheet" href="/bower_components/angular-bootstrap/ui-bootstrap-csp.css" type="text/css" />
+<!DOCTYPE html>
+<html ng-app="DataManagementApp">
 
-    
-        <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
-        <script type="text/javascript" src="/bower_components/angular-route/angular-route.js"></script>
-        <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/bower_components/toastr/toastr.min.js"></script>
-        
-        <script type="text/javascript" src="/bower_components/angular-animate/angular-animate.min.js"></script>
+<head>
 
-        <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-        <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <script type="text/javascript" src="data-management-app.js"></script>
-        <script type="text/javascript" src="list-ctrl.js"></script>
-        <script type="text/javascript" src="edit-ctrl.js"></script>
-        <script type="text/javascript" src="analytics-ctrl.js"></script>
-        <script type="text/javascript" src="integration1-ctrl.js"></script>
-        <script type="text/javascript" src="integration2-ctrl.js"></script>
-        
-        <script type="text/javascript" src="/bower_components/highcharts/highcharts.js"></script>
-        <script type="text/javascript" src="/bower_components/highcharts/modules/exporting.js"></script>
-        
-    </head>
+    <title>Conferences</title>
+
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css" />
+    <link href="/bower_components/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Custom CSS -->
+    <link href="vendor/css/full-width-pics.css" rel="stylesheet">
+    <link href="vendor/css/custom-bootstrap.css" rel="stylesheet">
+
+    <!-- Angular-bootstrap -->
+    <link rel="stylesheet" href="/bower_components/angular-bootstrap/ui-bootstrap-csp.css" type="text/css" />
+
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/bower_components/angular-route/angular-route.js"></script>
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/bower_components/toastr/toastr.min.js"></script>
+
+    <script type="text/javascript" src="/bower_components/angular-animate/angular-animate.min.js"></script>
+
+    <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+    <script type="text/javascript" src="data-management-app.js"></script>
+    <script type="text/javascript" src="list-ctrl.js"></script>
+    <script type="text/javascript" src="edit-ctrl.js"></script>
+    <script type="text/javascript" src="analytics-ctrl.js"></script>
+    <script type="text/javascript" src="integration1-ctrl.js"></script>
+    <script type="text/javascript" src="integration2-ctrl.js"></script>
+    <script type="text/javascript" src="streaming-ctrl.js"></script>
+     <script type="text/javascript" src="view-ctrl.js"></script>
+
+    <script type="text/javascript" src="/bower_components/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="/bower_components/highcharts/modules/exporting.js"></script>
+
+    <script type="text/javascript" src="/bower_components/auth0-lock/build/lock.min.js"></script>
+    <script type="text/javascript" src="/bower_components/highcharts/modules/series-label.js"></script>
+
+</head>
 
 <body>
     <!--<div ng-view></div>-->
@@ -58,24 +63,31 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+
                 <a class="navbar-brand" href="#">Conferences</a>
+
+
             </div>
+
+
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+
                     <li>
-                        <a href="#"></a>
+                        <a href="#">Secure</a>
                     </li>
-                    <!--
-                    <li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Login</a>
-                    </li>
-                    -->
+
+                </ul>
+
+            </div>
+            <div>
+                <ul class="nav navbar-nav navbar-right">
+                    <dt style="display:inline-block;font-size:12px;color:white" id="user-nick">Anonymous.</dt>
+                    <button id="login-access" class="btn btn-link btn-xs">Log In</button>
                 </ul>
             </div>
+
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
@@ -114,6 +126,75 @@
         </div>
         <!-- /.container -->
     </footer>
+
+    <script>
+        var clientId = 'roGH4kYJSG1iW1yFs7aYHiMSxaJ8vX1K';
+        var domain = 'si1718-jf-conferences.eu.auth0.com';
+
+        var lock = new Auth0Lock(
+            clientId,
+            domain
+        );
+
+        if (localStorage.getItem('logged') == "true") {
+            var userProfile = localStorage.getItem('profile')
+            console.info("Entra en asignacion de userProfile porque logged es: " + localStorage.getItem('logged'));
+            document.getElementById('user-nick').textContent = JSON.parse(userProfile).nickname;
+            document.getElementById('login-access').textContent = "Log Out";
+        }
+        else {
+            console.info("No entra en asignacion de userProfile porque logged es: " + localStorage.getItem('logged'));
+
+        }
+
+        document.getElementById('login-access').addEventListener('click', function() {
+            if (localStorage.getItem('logged') == "true") {
+                console.info("Entra en el logout");
+                logout();
+            }
+            else {
+                console.info("Entra en el login");
+                login();
+            }
+
+        });
+
+        function login() {
+            lock.show();
+        }
+
+        function logout() {
+            // Reset token
+            localStorage.setItem("accessToken", null);
+            localStorage.setItem("profile", null);
+            localStorage.setItem('logged', "false");
+            //localStorage.setItem('idToken', null);
+
+            lock.logout();
+        }
+
+
+
+        // Listening for the authenticated event
+        lock.on("authenticated", function(authResult) {
+            // Use the token in authResult to getUserInfo() and save it to localStorage
+            lock.getUserInfo(authResult.accessToken, function(error, profile) {
+                if (error) {
+                    // Handle error
+                    return;
+                }
+
+                document.getElementById('user-nick').textContent = profile.nickname;
+
+                localStorage.setItem('accessToken', authResult.accessToken);
+                console.info(authResult);
+                localStorage.setItem('profile', JSON.stringify(profile));
+                localStorage.setItem('logged', "true");
+                document.getElementById('login-access').textContent = "Log Out";
+                console.info("El valor de logged es: " + localStorage.getItem('logged'));
+            });
+        });
+    </script>
 </body>
 
-  </html>
+</html>

@@ -40,7 +40,7 @@ angular.module("DataManagementApp")
                 $http.get("https://si1718-ajr-proceedings.herokuapp.com/api/v1/proceedings")
                     .then(function(response) {
                         data2 = response.data;
-                        console.log(data2.length)
+                        //console.log(data2.length)
                         var listSearchedConferences = [];
                         for (var i = 0; i < $scope.data.length; i++) {
                             countryApi = $scope.data[i].country;
@@ -51,11 +51,11 @@ angular.module("DataManagementApp")
                             }
 
                             confAcronym = $scope.data[i].acronym;
-                            console.log(confName + "     iteracion " + i);
+                           // console.log(confName + "     iteracion " + i);
                             var title = "";
                             for (var j = 0; j < data2.length; j++) {
                                 title = data2[j].title;
-                                console.log(title + "     iteracion " + j);
+                               // console.log(title + "     iteracion " + j);
                                 if (title.includes(confName) || confName.includes(title)) {
                                     console.log("entra")
 
@@ -67,7 +67,7 @@ angular.module("DataManagementApp")
                                     }
                                 }
                                 else {
-                                    console.log(title.length + " " + confName.length);
+                                   // console.log(title.length + " " + confName.length);
                                 }
                             }
                             listSearchedConferences.push(confName);
@@ -132,48 +132,6 @@ angular.module("DataManagementApp")
                                 data: Object.values($scope.conferenceMap)
                             }]
                         });
-
-                        // Highcharts.chart('container', {
-                        //     chart: {
-                        //         type: 'column'
-                        //     },
-                        //     title: {
-                        //         text: 'Data representation'
-                        //     },
-                        //     subtitle: {
-                        //         text: ''
-                        //     },
-                        //     xAxis: {
-                        //         categories: Object.keys($scope.conferenceMap),
-                        //         crosshair: true
-                        //     },
-                        //     yAxis: {
-                        //         min: 0,
-                        //         title: {
-                        //             text: 'Nº de proceedings'
-                        //         }
-                        //     },
-                        //     tooltip: {
-                        //         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                        //         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                        //             '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
-                        //         footerFormat: '</table>',
-                        //         shared: true,
-                        //         useHTML: true
-                        //     },
-                        //     plotOptions: {
-                        //         column: {
-                        //             pointPadding: 0.2,
-                        //             borderWidth: 0
-                        //         }
-                        //     },
-                        //     series: [{
-                        //         name: 'Conference',
-                        //         data: Object.values($scope.conferenceMap)
-
-                        //     }]
-
-                        // });
 
                     });
 

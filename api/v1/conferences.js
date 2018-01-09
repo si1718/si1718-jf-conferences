@@ -8,20 +8,51 @@ exports.register = function(app, db, baseURL) {
     app.get(baseURL + '/conferences', function(req, res) {
         var search = req.query.search;
         var query = {};
+        var hasParam = true;
 
         if (search) {
-             query = { $or:[ 
-                        {'idConference':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
-                        {'conference':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
-                        {'acronym':{ $regex: '.*' + search + '.*', $options: 'i' }},
-                        {'edition':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
-                        {'city':{ $regex: '.*' + search + '.*', $options: 'i' }}, 
-                        {'country':{ $regex: '.*' + search + '.*', $options: 'i' }} 
-                    ]};
-            
+            query = {
+                $or: [
+                    { 'idConference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'conference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'acronym': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'edition': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'city': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'country': { $regex: '.*' + search + '.*', $options: 'i' } }
+                ]
+            };
+
         }
+
+        /* if (!hasParam) {
+             console.log("WARNING: New GET request to /conferences/:idConference without idConference, sending 400...");
+             res.sendStatus(400); // bad request
+         }
+         else {
+             var skipQuantity = req.query.skip;
+             var limitQuantity = req.query.limit;
+             if (!skipQuantity) {
+                 skipQuantity = 0;
+             }
+             else {
+                 skipQuantity = parseInt(skipQuantity);
+                 if (isNaN(skipQuantity)) {
+                     skipQuantity = 0;
+                 }
+             }
+             if (!limitQuantity) {
+                 limitQuantity = 10;
+             }
+             else {
+                 limitQuantity = parseInt(limitQuantity);
+                 if (isNaN(limitQuantity)) {
+                     limitQuantity = 10;
+                 }
+
+             }
+         }*/
         console.log("INFO: New GET req to /conferences");
-        db.find(query).toArray(function(err, conferences) {
+        db.find(query /*, { skip: skipQuantity, limit: limitQuantity }*/ ).toArray(function(err, conferences) {
             if (err) {
                 console.error('WARNING: Error getting data from DB');
                 res.sendStatus(500); // internal server error
@@ -32,6 +63,80 @@ exports.register = function(app, db, baseURL) {
             }
         });
     });
+
+
+    /* app.get(baseURL + '/resultsCount', function(req, res) {
+         var search = req.query.search;
+         var query = {};
+        
+         if (search) {
+             query = {
+                 $or: [
+                     { 'idConference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                     { 'conference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                     { 'acronym': { $regex: '.*' + search + '.*', $options: 'i' } },
+                     { 'edition': { $regex: '.*' + search + '.*', $options: 'i' } },
+                     { 'city': { $regex: '.*' + search + '.*', $options: 'i' } },
+                     { 'country': { $regex: '.*' + search + '.*', $options: 'i' } }
+                 ]
+             };
+
+         }
+        
+         console.log("INFO: New GET req to /conferences");
+         db.find(query).count(function(err, result) {
+             if (err) {
+                 console.error('WARNING: Error getting data from DB');
+                 res.sendStatus(500); // internal server error
+             }
+             else {
+                 console.log("INFO: Sending conferences: " + JSON.stringify(result, 2, null));
+                 res.send({"res": result});
+               
+             }
+         });
+     });*/
+
+    // GET number of results
+    /*app.get(baseURL + '/resultsCount', function(req, res) {
+        var search = req.query.search;
+        var query = {};
+        var hasParam = true;
+        
+        if (search) {
+            query = {
+                $or: [
+                    { 'idConference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'conference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'acronym': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'edition': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'city': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'country': { $regex: '.*' + search + '.*', $options: 'i' } }
+                ]
+            };
+
+        }
+
+        if (!hasParam) {
+            console.log("WARNING: New GET request to /conferences/:idConference without idConference, sending 400...");
+            res.sendStatus(400); // bad request
+        }
+       
+        console.log("INFO: New GET req to /conferences");
+        db.find(query).count(function(err, result) {
+            if (err) {
+                console.error('WARNING: Error getting data from DB');
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                 if (result) {
+                        res.send({ "total": result });
+                    }
+                console.log("INFO: Sending conferences: " + JSON.stringify(result, 2, null));
+                //res.send(conferences);
+            }
+        });
+    });*/
 
     // GET a collection over a single resource
     app.get(baseURL + '/conferences/:idConference', function(req, res) {
@@ -60,7 +165,7 @@ exports.register = function(app, db, baseURL) {
                     }
                 }
             });
-            // }
+
         }
     });
 

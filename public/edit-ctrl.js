@@ -59,7 +59,7 @@ angular.module("DataManagementApp")
                         $scope.proceedingField = response.data[0].title;
                         $scope.updatedConference.proceeding = urlIdProceeding(response.data[0]);
                         $scope.updatedConference.proceedingTitle = response.data[0].title;
-                        $scope.updatedConference.proceedingViewURL = response.data[0].viewURL;
+                        $scope.updatedConference.proceedingViewURL = "https://si1718-ajr-proceedings.herokuapp.com/#!/edit/" + response.data[0].idProceeding;
                         $scope.dis = true;
                     }
                 }, function(error){

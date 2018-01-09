@@ -3,12 +3,30 @@
     <br>
     <br>
 
-    <div>
-        <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Search" ng-model="searchValue">
-        <a class="btn btn-info" ng-click="searchConference()">Search</a>
-        <!--<button class="btn btn-info" onclick="location.href='#!/conferences';">Back</button>-->
+    <!-- <div>
+        <!--<input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" maxlength="64" placeholder="Search" ng-model="searchValue">
+        <!-- <a class="btn btn-info" ng-click="searchConference()">Search</a>
+        <input type="text" class="form-control input-sm" width="50px" placeholder="Search">
+        <button type="submit" class="btn btn-primary btn-sm" ng-click="searchConference()">Search</button>
+        <!--<button class="btn btn-info" onclick="location.href='#!/conferences';">Back</button>
+        
+        <!--<input type="text" class="form-control" name="search" id="search" placeholder="Search">
+        <span class="glyphicon glyphicon-search form-control-feedback" ng-click="searchConference()"></span>
+    </div>-->
+
+    <div class="col-md-10 col-xs-3">
+        <input type="text" class="form-control ng-pristine ng-valid ng-empty ng-touched" width="64%" ng-model="searchValue" placeholder="Search">
     </div>
-    
+    <div class="col-md-2 col-xs-3">
+        <a class="btn btn-info" ng-click="searchConference()">
+            <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">Search</font>
+            </font>
+        </a>
+    </div>
+    <br>
+    <br>
+
     <table class="table table-responsive" style="display: block; width: 100%; overflow-x: auto;">
         <thead>
             <tr>
@@ -49,6 +67,7 @@
                 <td>{{conference.keywords}}</td>
                 <td>
                     <button class="btn btn-danger" ng-click="deleteConference(conference.idConference)">Delete</button>
+                    <a href="#!/view/{{conference.idConference}}"><button class="btn btn-primary" ng-click="viewConference()">View</button></a>
                 </td>
             </tr>
         </tbody>
@@ -56,5 +75,10 @@
             <button class="btn btn-danger" ng-click="deleteAllConferences()">Delete all</button>
         </td>
     </table>
+
+    <!--<ul uib-pagination total-items="totalItems" ng-model="page" max-size="maxPagesLinksView" class="pagination-sm" boundary-links="true" force-ellipses="true" ng-change="pageChanged()"></ul>-->
+
+
+</div>
 
 </div>

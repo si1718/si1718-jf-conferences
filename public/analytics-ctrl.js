@@ -28,7 +28,7 @@ angular.module("DataManagementApp")
                     $scope.countryMap[$scope.data[i].country] = 1;
                 }
 
-                console.log($scope.data[i].idConference, $scope.data[i].conference, $scope.data[i].city, $scope.data[i].country);
+               // console.log($scope.data[i].idConference, $scope.data[i].conference, $scope.data[i].city, $scope.data[i].country);
             }
 
             $http.get("/api/v1/conferences").then(function(response) {

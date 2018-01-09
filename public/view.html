@@ -1,0 +1,54 @@
+<div ng-controller="ViewCtrl">
+    <h1>View Conference</h1>
+    <br>
+    <br>
+    <div class="form-group">
+        <label for="idConference">idConference</label>
+       
+        <input type="text" name="idConference" ng-model="viewedConferences.idConference" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <div class="form-group">
+        <label for="conference">conference</label>
+        <input type="text" name="conference" ng-model="viewedConferences.conference" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <div class="form-group">
+        <label for="acronym">acronym</label>
+        <input type="text" name="acronym" ng-model="viewedConferences.acronym" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <div class="form-group">
+        <label for="edition">edition</label>
+        <input type="text" name="edition" ng-model="viewedConferences.edition" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <div class="form-group">
+        <label for="city">city</label>
+        <input type="text" name="city" ng-model="viewedConferences.city" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <div class="form-group">
+        <label for="country">country</label>
+        <input type="text" name="country" ng-model="viewedConferences.country" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <div class="form-group">
+        <label for="keywords">keywords</label>
+        <input type="text" name="keywords" ng-model="viewedConferences.keywords" disabled="" class="form-control ng-pristine ng-untouched ng-valid ng-scope ng-empty">
+    </div>
+    <br>
+    <button class="btn btn-info" onclick="location.href='#!/conferences';">Back</button>
+
+    <h3>Recommendations</h3>
+    <table class="table table-responsive" style="display: block; width: 100%; overflow-x: auto;">
+        <thead>
+            <tr>
+                <th>idConference</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="recommendation in recommendations">
+                <td><a ng-model="recomendaciones.recomendacion1" href="#!/view/{{conference.idConference}}"></a>recomendaciones.recomendacion1</td>
+                <td><a ng-model="recomendaciones.recomendacion2" href="#!/view/{{conference.idConference}}"></a>recomendaciones.recomendacion2</td>
+                <td><a ng-model="recomendaciones.recomendacion3" href="#!/view/{{conference.idConference}}"></a>recomendaciones.recomendacion3</td>
+            </tr>
+            
+        </tr>
+        </tbody>
+    </table>
+</div>

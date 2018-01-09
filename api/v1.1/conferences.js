@@ -1,13 +1,18 @@
-var exports = module.exports = {'secret': 'secret'};
+var exports = module.exports = {};
 
 //Register all the function used in this module
-exports.register = function(app, db, baseURL1) {
+exports.register = function(app, db2, baseURL1, jwtCheck) {
 
+
+    app.get(baseURL1 + '/authorized', jwtCheck, function(req, res) {
+        res.send('Secured Resource');
+    });
 
     // GET a collection
-    app.get(baseURL1 + '/conferences', function(req, res) {
+    app.get(baseURL1 + '/conferences', jwtCheck, function(req, res) {
         var search = req.query.search;
         var query = {};
+        var hasParam = true;
 
         if (search) {
             query = {
@@ -22,8 +27,36 @@ exports.register = function(app, db, baseURL1) {
             };
 
         }
+
+        if (!hasParam) {
+            console.log("WARNING: New GET request to /conferences/:idConference without idConference, sending 400...");
+            res.sendStatus(400); // bad request
+        }
+        else {
+            var skipQuantity = req.query.skip;
+            var limitQuantity = req.query.limit;
+            if (!skipQuantity) {
+                skipQuantity = 0;
+            }
+            else {
+                skipQuantity = parseInt(skipQuantity);
+                if (isNaN(skipQuantity)) {
+                    skipQuantity = 0;
+                }
+            }
+            if (!limitQuantity) {
+                limitQuantity = 10;
+            }
+            else {
+                limitQuantity = parseInt(limitQuantity);
+                if (isNaN(limitQuantity)) {
+                    limitQuantity = 10;
+                }
+
+            }
+        }
         console.log("INFO: New GET req to /conferences");
-        db.find(query).toArray(function(err, conferences) {
+        db2.find(query, { skip: skipQuantity, limit: limitQuantity }).toArray(function(err, conferences) {
             if (err) {
                 console.error('WARNING: Error getting data from DB');
                 res.sendStatus(500); // internal server error
@@ -34,40 +67,41 @@ exports.register = function(app, db, baseURL1) {
             }
         });
     });
+    
+     app.get(baseURL1 + '/resultsCount', jwtCheck, function(req, res) {
+        var search = req.query.search;
+        var query = {};
+       
+        if (search) {
+            query = {
+                $or: [
+                    { 'idConference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'conference': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'acronym': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'edition': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'city': { $regex: '.*' + search + '.*', $options: 'i' } },
+                    { 'country': { $regex: '.*' + search + '.*', $options: 'i' } }
+                ]
+            };
 
-    // GET a collection over a single resource
-    app.get(baseURL1 + '/conferences/:idConference', function(req, res) {
-        var idConference = req.params.idConference;
-        //var query = insertSearchFields(req, { "idConference": idConference });
-        if (!idConference) {
-            console.log("WARNING: New GET req to /conferences/:idConference without idConference, sending 400...");
-            res.sendStatus(400); // bad request
         }
-        else {
-            console.log("INFO: New GET req to /conferences/" + idConference);
-            db.findOne({ "idConference": idConference }, (err, filteredConferences) => {
-                if (err) {
-                    console.error('WARNING: Error getting data from DB');
-                    res.sendStatus(500); // internal server error
-                }
-                else {
-
-                    if (filteredConferences) {
-                        console.log("INFO: Sending conferences: " + JSON.stringify(filteredConferences, 2, null));
-                        res.send(filteredConferences);
-                    }
-                    else {
-                        console.log("WARNING: There are not any conference with idConference " + idConference);
-                        res.sendStatus(404); // not found
-                    }
-                }
-            });
-            // }
-        }
+       
+        console.log("INFO: New GET req to /conferences");
+        db2.find(query).count(function(err, result) {
+            if (err) {
+                console.error('WARNING: Error getting data from DB');
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: Sending conferences: " + JSON.stringify(result, 2, null));
+                res.send({"res": result});
+              
+            }
+        });
     });
 
     // Create a collection
-    app.post(baseURL1 + '/conferences', function(req, res) {
+    app.post(baseURL1 + '/conferences', jwtCheck, function(req, res) {
         var newConference = req.body;
         if (!newConference) {
             console.log("WARNING: New POST req to /conferences/ without conference, sending 400...");
@@ -82,7 +116,7 @@ exports.register = function(app, db, baseURL1) {
             else {
                 var idConference = newConference.acronym.concat("-".concat(newConference.edition));
                 newConference.idConference = idConference.toLowerCase();
-                db.findOne({ "idConference": newConference.idConference }, function(err, conferences) {
+                db2.findOne({ "idConference": newConference.idConference }, function(err, conferences) {
                     if (err) {
                         console.error('WARNING: Error getting data from DB');
                         res.sendStatus(500); // internal server error
@@ -93,7 +127,7 @@ exports.register = function(app, db, baseURL1) {
                             res.sendStatus(409); // conflict
                         }
                         else {
-                            db.insertOne(req.body, (err, result) => {
+                            db2.insertOne(req.body, (err, result) => {
                                 if (err) {
                                     console.error('WARNING: Error getting data from DB');
                                     res.sendStatus(500); // internal server error
@@ -112,20 +146,20 @@ exports.register = function(app, db, baseURL1) {
     });
 
     // Create a resource
-    app.post(baseURL1 + '/conferences/:idConference', function(req, res) {
+    app.post(baseURL1 + '/conferences/:idConference', jwtCheck, function(req, res) {
         var idConference = req.params.idConference;
         console.log("WARNING: New POST request to /conferences/" + idConference + ", sending 405...");
         res.sendStatus(405);
     });
 
     // Update a collection
-    app.put(baseURL1 + '/conferences', function(req, res) {
+    app.put(baseURL1 + '/conferences', jwtCheck, function(req, res) {
         console.log("WARNING: New PUT request to /conferences, sending 405...");
         res.sendStatus(405);
     });
 
     // Update a resource
-    app.put(baseURL1 + '/conferences/:idConference', function(req, res) {
+    app.put(baseURL1 + '/conferences/:idConference', jwtCheck, function(req, res) {
         var updatedConference = req.body;
         var idConference = req.params.idConference;
         if (!updatedConference /*|| idConference != updatedConference.idConference*/ ) {
@@ -144,7 +178,7 @@ exports.register = function(app, db, baseURL1) {
                 res.sendStatus(422); // unprocessable entity
             }
             else {
-                db.findOne({ "idConference": idConference }, (err, conferences) => {
+                db2.findOne({ "idConference": idConference }, (err, conferences) => {
                     if (err) {
                         console.error('WARNING: Error getting data from DB');
                         res.sendStatus(500); // internal server error
@@ -152,7 +186,7 @@ exports.register = function(app, db, baseURL1) {
                     else {
                         if (conferences) {
                             updatedConference.conference = conferences.conference;
-                            db.update({ "idConference": idConference }, updatedConference);
+                            db2.update({ "idConference": idConference }, updatedConference);
                             console.log("INFO: Modifying conference with idConference " + idConference + " with data " + JSON.stringify(updatedConference, 2, null));
                             res.send(updatedConference);
                         }
@@ -167,9 +201,9 @@ exports.register = function(app, db, baseURL1) {
     });
 
     // Delete a collection
-    app.delete(baseURL1 + '/conferences', function(req, res) {
+    app.delete(baseURL1 + '/conferences', jwtCheck, function(req, res) {
         console.log("INFO: New DELETE request to /conferences");
-        db.remove({}, { justOne: false }, function(err, numRemoved) {
+        db2.remove({}, { justOne: false }, function(err, numRemoved) {
             if (err) {
                 console.error('WARNING: Error removing data from DB');
                 res.sendStatus(500); // internal server error
@@ -188,7 +222,7 @@ exports.register = function(app, db, baseURL1) {
     });
 
     // Delete a resource
-    app.delete(baseURL1 + '/conferences/:idConference', function(req, res) {
+    app.delete(baseURL1 + '/conferences/:idConference', jwtCheck, function(req, res) {
         var idConference = req.params.idConference;
         if (!idConference) {
             console.log("WARNING: New DELETE request to /conferences/:idConference without idConference, sending 400...");
@@ -196,7 +230,7 @@ exports.register = function(app, db, baseURL1) {
         }
         else {
             console.log("INFO: New DELETE request to /conferences/" + idConference);
-            db.remove({ "idConference": idConference }, {}, function(err, numRemoved) {
+            db2.remove({ "idConference": idConference }, {}, function(err, numRemoved) {
                 if (err) {
                     console.error('WARNING: Error removing data from DB');
                     res.sendStatus(500); // internal server error

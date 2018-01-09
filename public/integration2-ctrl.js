@@ -43,7 +43,7 @@ angular.module("DataManagementApp")
                 $http.get("https://si1718-nlg-papers.herokuapp.com/api/v1/papers")
                     .then(function(response) {
                         data2 = response.data;
-                        console.log(data2.length)
+                        //console.log(data2.length)
                         var listSearchedConferences = [];
                         for (var i = 0; i < $scope.data.length; i++) {
                             countryApi = $scope.data[i].country;
@@ -54,11 +54,11 @@ angular.module("DataManagementApp")
                             }
                             
                             confAcronym = $scope.data[i].acronym;
-                            console.log(confName + "     iteracion " + i);
+                            //console.log(confName + "     iteracion " + i);
                             var proceeding = "";
                             for (var j = 0; j < data2.length; j++) {
                                 proceeding = data2[j].proceeding;
-                                console.log(proceeding  + "     iteracion " + j);
+                               // console.log(proceeding  + "     iteracion " + j);
                                 if (proceeding.includes(confName) || confName.includes(proceeding)) {
                                     console.log("entra")
                                     if (!$scope.conferenceMap[confName]) {
@@ -68,13 +68,13 @@ angular.module("DataManagementApp")
                                         $scope.conferenceMap[confName] += 1;
                                     }
                                 }else{
-                                    console.log(proceeding.length + " " + confName.length);
+                                  //  console.log(proceeding.length + " " + confName.length);
                                 }
                             }
                             listSearchedConferences.push(confName);
                         }
-                        console.log(listSearchedConferences);
-                        console.log($scope.conferenceMap);
+                       // console.log(listSearchedConferences);
+                       // console.log($scope.conferenceMap);
                         
                         // Highcharts
 

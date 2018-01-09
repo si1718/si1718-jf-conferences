@@ -1,5 +1,5 @@
 /* global angular */
-angular.module("DataManagementApp", ["ngRoute", "ngAnimate"/*, "ui.bootstrap"*/]).config(function($routeProvider) {
+angular.module("DataManagementApp", ["ngRoute", "ngAnimate", "ui.bootstrap"]).config(function($routeProvider) {
     $routeProvider
         .when("/", {
             templateUrl: "main.html"

@@ -9,7 +9,7 @@ angular.module("DataManagementApp")
         $scope.searchValue = "";
 
 
-        /*$scope.conferenceExists = true;
+        $scope.conferenceExists = true;
         $scope.limit = 10;
         $scope.maxPagesLinksView = 5;
 
@@ -30,13 +30,12 @@ angular.module("DataManagementApp")
                     $scope.paginationError = true;
                 });
             console.log($scope.totalItems);
-        }*/
+        }
 
         function refresh() {
             //console.log("Refresh called");
             //console.log("Page number: " + $scope.page);
-            var apiGetRequest = "/api/v1/conferences";
-            //?limit=" + $scope.limit + "&skip=" + (($scope.page - 1) * $scope.limit);
+            var apiGetRequest = "/api/v1/conferences?limit=" + $scope.limit + "&skip=" + (($scope.page - 1) * $scope.limit);
            
             //console.log(apiGetRequest);
             $http
@@ -86,7 +85,7 @@ angular.module("DataManagementApp")
                     refresh();
         };
         
-       /* $scope.searchConference2 = function() {
+        $scope.searchConference2 = function() {
             extractCount();
             $scope.page = 1;
             $http({
@@ -112,7 +111,7 @@ angular.module("DataManagementApp")
                         $scope.conferenceExists = false;
 
                     });
-        };*/
+        };
 
         $scope.addConference = function() {
 
@@ -165,14 +164,14 @@ angular.module("DataManagementApp")
                 });
         };
         
-        /* $scope.conferenceIdConference = $routeParams.idConference;
+         $scope.conferenceIdConference = $routeParams.idConference;
 
 
         $http
             .get("/api/v1/conferences/" + $scope.conferenceIdConference)
             .then(function(response) {
                 $scope.viewedconferences = response.data;
-            });*/
+            });
 
       /*  $scope.viewConference = function() {
 
@@ -188,11 +187,11 @@ angular.module("DataManagementApp")
                 });
         };*/
 
-      /*  $scope.pageChanged = function() {
+        $scope.pageChanged = function() {
             $scope.searchConference();
-        };*/
+        };
 
-       // extractCount();
+       extractCount();
         refresh();
 
     }]);

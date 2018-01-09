@@ -24,14 +24,14 @@ exports.register = function(app, db, baseURL) {
 
         }
 
-        /* if (!hasParam) {
+        if (!hasParam) {
              console.log("WARNING: New GET request to /conferences/:idConference without idConference, sending 400...");
              res.sendStatus(400); // bad request
          }
          else {
              var skipQuantity = req.query.skip;
              var limitQuantity = req.query.limit;
-             if (!skipQuantity) {
+             /*if (!skipQuantity) {
                  skipQuantity = 0;
              }
              else {
@@ -49,10 +49,31 @@ exports.register = function(app, db, baseURL) {
                      limitQuantity = 10;
                  }
 
+             }*/
+         }
+         if(skipQuantity && limitQuantity){
+               if (!skipQuantity) {
+                 skipQuantity = 0;
              }
-         }*/
+             else {
+                 skipQuantity = parseInt(skipQuantity);
+                 if (isNaN(skipQuantity)) {
+                     skipQuantity = 0;
+                 }
+             }
+             
+             if (!limitQuantity) {
+                 limitQuantity = 10;
+             }
+             else {
+                 limitQuantity = parseInt(limitQuantity);
+                 if (isNaN(limitQuantity)) {
+                     limitQuantity = 10;
+                 }
+
+             }
         console.log("INFO: New GET req to /conferences");
-        db.find(query /*, { skip: skipQuantity, limit: limitQuantity }*/ ).toArray(function(err, conferences) {
+        db.find(query, { skip: skipQuantity, limit: limitQuantity }).toArray(function(err, conferences) {
             if (err) {
                 console.error('WARNING: Error getting data from DB');
                 res.sendStatus(500); // internal server error
@@ -62,10 +83,22 @@ exports.register = function(app, db, baseURL) {
                 res.send(conferences);
             }
         });
+         }else{
+             db.find(query).toArray(function(err, conferences) {
+            if (err) {
+                console.error('WARNING: Error getting data from DB');
+                res.sendStatus(500); // internal server error
+            }
+            else {
+                console.log("INFO: Sending conferences: " + JSON.stringify(conferences, 2, null));
+                res.send(conferences);
+            }
+        });
+         }
     });
 
 
-    /* app.get(baseURL + '/resultsCount', function(req, res) {
+     app.get(baseURL + '/resultsCount', function(req, res) {
          var search = req.query.search;
          var query = {};
         
@@ -95,7 +128,7 @@ exports.register = function(app, db, baseURL) {
                
              }
          });
-     });*/
+     });
 
     // GET number of results
     /*app.get(baseURL + '/resultsCount', function(req, res) {
